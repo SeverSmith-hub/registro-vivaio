@@ -1,290 +1,74 @@
+if(currentPage>totalPages)
+totalPages=currentPage;
 
-<!DOCTYPE html>
-<html lang="it">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Piante e semi da Samuel: scopri il piacere di coltivare e prenderti cura del verde.">
-  <title>Piante e semi da Samuel</title>
+loadPage(currentPage);
+};
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+document
+.getElementById("prevPage")
+.onclick=()=>{
 
-    html {
-      scroll-behavior: smooth;
-    }
+if(currentPage===1)
+return;
 
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      color: #293b30;
-      background: #fafbf8;
-      line-height: 1.7;
-    }
+savePage();
 
-    header {
-      background: #ffffff;
-      padding: 20px 7%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 16px;
-      border-bottom: 1px solid #e6ebe2;
-    }
+currentPage--;
 
-    .logo {
-      color: #315b43;
-      text-decoration: none;
-      font-weight: bold;
-      font-size: 1.25rem;
-    }
+loadPage(currentPage);
+};
 
-    nav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
+document
+.getElementById("newPage")
+.onclick=()=>{
 
-    nav a {
-      text-decoration: none;
-      color: #315b43;
-      font-size: 0.95rem;
-    }
+savePage();
 
-    nav a:hover {
-      text-decoration: underline;
-    }
+totalPages++;
 
-    .hero {
-      padding: 90px 7%;
-      text-align: center;
-      background: #eaf0e5;
-    }
+currentPage=totalPages;
 
-    .eyebrow {
-      color: #52765a;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      font-size: 0.8rem;
-      font-weight: bold;
-    }
+ctx.clearRect(
+0,0,
+canvas.width,
+canvas.height
+);
 
-    h1 {
-      color: #294b36;
-      font-size: clamp(2.4rem, 6vw, 4.5rem);
-      line-height: 1.12;
-      max-width: 800px;
-      margin: 18px auto;
-    }
+notes.value="";
 
-    .hero p {
-      max-width: 620px;
-      margin: 0 auto 28px;
-    }
+journal.className="journal dots";
 
-    .button {
-      display: inline-block;
-      background: #315b43;
-      color: #ffffff;
-      padding: 13px 24px;
-      border-radius: 6px;
-      text-decoration: none;
-      font-weight: bold;
-    }
+updateIndicator();
+};
 
-    .button:hover {
-      background: #23432f;
-    }
+document
+.getElementById("clearPage")
+.onclick=()=>{
 
-    section {
-      padding: 65px 7%;
-      scroll-margin-top: 20px;
-    }
+ctx.clearRect(
+0,0,
+canvas.width,
+canvas.height
+);
 
-    .section-title {
-      color: #294b36;
-      text-align: center;
-      font-size: 2rem;
-      margin: 0 0 12px;
-    }
+notes.value="";
 
-    .intro {
-      text-align: center;
-      max-width: 650px;
-      margin: 0 auto 35px;
-    }
+savePage();
+};
 
-    .products {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 20px;
-      max-width: 1100px;
-      margin: auto;
-    }
+/* START */
 
-    .product {
-      padding: 28px;
-      border: 1px solid #dfe7da;
-      border-radius: 12px;
-      background: #ffffff;
-    }
+totalPages=
+parseInt(
+localStorage.getItem(
+"midori_total_pages"
+)
+) || 1;
 
-    .product-mark {
-      color: #64856a;
-      font-size: 1.8rem;
-    }
+updateIndicator();
+loadPage(1);
 
-    .product h3 {
-      color: #315b43;
-      margin-bottom: 8px;
-    }
+</script>
 
-    .about {
-      background: #edf2e9;
-      text-align: center;
-    }
-
-    .about p {
-      max-width: 720px;
-      margin: 15px auto;
-    }
-
-    .contact {
-      text-align: center;
-    }
-
-    footer {
-      background: #294b36;
-      color: #ffffff;
-      text-align: center;
-      padding: 25px 7%;
-      font-size: 0.9rem;
-    }
-
-    @media (max-width: 700px) {
-      header {
-        flex-direction: column;
-      }
-
-      nav {
-        justify-content: center;
-        gap: 14px;
-      }
-
-      .hero {
-        padding: 60px 6%;
-      }
-
-      section {
-        padding: 45px 6%;
-      }
-
-      .products {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
-</head>
-
-<body>
-  <header>
-    <a class="logo" href="#home">Piante e semi da Samuel</a>
-
-    <nav aria-label="Menu principale">
-      <a href="#prodotti">Prodotti</a>
-      <a href="#chi-siamo">Chi siamo</a>
-      <a href="#contatti">Contatti</a>
-    </nav>
-  </header>
-
-  <main>
-    <section class="hero" id="home">
-      <p class="eyebrow">Il piacere di coltivare</p>
-
-      <h1>Fai crescere le tue idee.</h1>
-
-      <p>
-        Semi, piante e passione per il verde.
-        Trova l'ispirazione per rendere più verdi
-        la tua casa, il tuo balcone o il tuo giardino.
-      </p>
-
-      <a class="button" href="#prodotti">
-        Scopri i prodotti
-      </a>
-    </section>
-
-    <section id="prodotti">
-      <h2 class="section-title">Esplora il nostro mondo verde</h2>
-
-      <p class="intro">
-        Ogni nuova coltivazione comincia con una piccola idea.
-        Scopri le nostre categorie e trova quella che fa per te.
-      </p>
-
-      <div class="products">
-        <article class="product">
-          <div class="product-mark" aria-hidden="true">01 /</div>
-          <h3>Semi</h3>
-          <p>
-            Dai spazio alle tue idee con semi per nuove
-            coltivazioni, fiori e ortaggi.
-          </p>
-        </article>
-
-        <article class="product">
-          <div class="product-mark" aria-hidden="true">02 /</div>
-          <h3>Piante</h3>
-          <p>
-            Scopri come portare un tocco di natura
-            nei tuoi ambienti e nei tuoi spazi all'aperto.
-          </p>
-        </article>
-
-        <article class="product">
-          <div class="product-mark" aria-hidden="true">03 /</div>
-          <h3>Cura del verde</h3>
-          <p>
-            Scopri prodotti e accessori utili per
-            accompagnare la crescita delle tue piante.
-          </p>
-        </article>
-      </div>
-    </section>
-
-    <section class="about" id="chi-siamo">
-      <h2 class="section-title">La passione di Samuel</h2>
-
-      <p>
-        Piante e semi da Samuel nasce dall'amore per il verde
-        e dal piacere di vedere crescere qualcosa giorno dopo giorno.
-        Qui puoi scoprire i prodotti e trovare ispirazione
-        per le tue coltivazioni.
-      </p>
-    </section>
-
-    <section class="contact" id="contatti">
-      <h2 class="section-title">Coltiviamo nuove idee?</h2>
-
-      <p class="intro">
-        Vuoi informazioni sui prodotti disponibili?
-        Contatta Samuel per saperne di più.
-      </p>
-
-      <!-- Sostituisci l'indirizzo qui sotto con la tua email -->
-      <a class="button"
-         href="mailto:INSERISCI-LA-TUA-EMAIL">
-        Contattaci
-      </a>
-    </section>
-  </main>
-
-  <footer>
-    <p>Piante e semi da Samuel</p>
-    <p>Il piacere di coltivare, ogni giorno.</p>
-  </footer>
 </body>
 </html>
